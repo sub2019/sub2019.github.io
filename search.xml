@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>vue百度地图插件</title>
+    <url>/2020/03/08/vue%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE%E6%8F%92%E4%BB%B6/</url>
+    <content><![CDATA[<h2 id="1-最终效果"><a href="#1-最终效果" class="headerlink" title="1. 最终效果"></a>1. 最终效果</h2><p><img src="https://img-blog.csdnimg.cn/20191218111203534.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MjU4ODk2Ng==,size_16,color_FFFFFF,t_70" alt="百度地图"></p>
+<h2 id="2-申请百度地图秘钥"><a href="#2-申请百度地图秘钥" class="headerlink" title="2. 申请百度地图秘钥"></a>2. 申请百度地图秘钥</h2><p><a href="https://blog.csdn.net/weixin_42813606/article/details/88556804" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42813606/article/details/88556804</a></p>
+<h2 id="3-代码"><a href="#3-代码" class="headerlink" title="3. 代码"></a>3. 代码</h2><h3 id="（1）定义"><a href="#（1）定义" class="headerlink" title="（1）定义"></a>（1）定义</h3><p>地图组件：map.vue（重要的2个参数：中心点坐标和秘钥）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;!-- 这是地图组价, 是一个公共的组件 --&gt;</span><br><span class="line">  &lt;div</span><br><span class="line">    :id&#x3D;&quot;id&quot;</span><br><span class="line">    :style&#x3D;&quot;&#123;width:width+&#39;px&#39;,height:height+&#39;px&#39;,margin:&#39;34px auto&#39;&#125;&quot;</span><br><span class="line">    class&#x3D;&quot;m-map&quot;&#x2F;&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  props: &#123;</span><br><span class="line">    width: &#123;</span><br><span class="line">      type:Number,</span><br><span class="line">      default:300</span><br><span class="line">    &#125;,</span><br><span class="line">    height: &#123;</span><br><span class="line">      type:Number,</span><br><span class="line">      default:300</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x2F;&#x2F; 中心点</span><br><span class="line">    point: &#123;</span><br><span class="line">      type:Array,</span><br><span class="line">      default()&#123;</span><br><span class="line">        return [116.46,39.92] &#x2F;&#x2F; 1.中心点坐标（百度可查任意城市坐标）</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      id: &#96;map&#96;,</span><br><span class="line">      key: &#39;c577ac0dd939b69f706e6468330cdb85&#39; &#x2F;&#x2F; 2. 秘钥</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  watch: &#123;</span><br><span class="line">    &#x2F;&#x2F; 中心点 和  漂浮物</span><br><span class="line">    point: function (val, old) &#123;</span><br><span class="line">      this.map.setCenter(val)</span><br><span class="line">      this.marker.setPosition(val)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  mounted() &#123;</span><br><span class="line">    let self &#x3D; this</span><br><span class="line">    self.id &#x3D; &#96;map$&#123;Math.random().toString().slice(4, 6)&#125;&#96;</span><br><span class="line"></span><br><span class="line">    window.onmaploaded &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">      let map &#x3D; new window.AMap.Map(self.id, &#123;</span><br><span class="line">        resizeEnable: true,</span><br><span class="line">        zoom: 11, &#x2F;&#x2F; 默认缩放级别，越大越详细</span><br><span class="line">        center: self.point</span><br><span class="line">      &#125;)</span><br><span class="line">      self.map &#x3D; map</span><br><span class="line">      &#x2F;&#x2F;</span><br><span class="line">      window.AMap.plugin(&#39;AMap.ToolBar&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">        let toolbar &#x3D; new window.AMap.ToolBar()</span><br><span class="line">        map.addControl(toolbar)</span><br><span class="line">        let marker &#x3D; new window.AMap.Marker(&#123;</span><br><span class="line">          icon: &#39;https:&#x2F;&#x2F;webapi.amap.com&#x2F;theme&#x2F;v1.3&#x2F;markers&#x2F;n&#x2F;mark_b.png&#39;,</span><br><span class="line">          position: self.point</span><br><span class="line">        &#125;)</span><br><span class="line">        self.marker &#x3D; marker</span><br><span class="line">        marker.setMap(map)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    const url &#x3D; &#96;https:&#x2F;&#x2F;webapi.amap.com&#x2F;maps?v&#x3D;1.4.10&amp;key&#x3D;$&#123;self.key&#125;&amp;callback&#x3D;onmaploaded&#96;</span><br><span class="line">    let jsapi &#x3D; document.createElement(&#39;script&#39;)</span><br><span class="line">    jsapi.charset &#x3D; &#39;utf-8&#39;</span><br><span class="line">    jsapi.src &#x3D; url</span><br><span class="line">    document.head.appendChild(jsapi)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="（2）使用"><a href="#（2）使用" class="headerlink" title="（2）使用"></a>（2）使用</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;mt-products&quot;&gt;</span><br><span class="line">    &lt;el-row&gt;</span><br><span class="line">      &lt;el-col :span&#x3D;&quot;19&quot;&gt;</span><br><span class="line">        &lt;Crumbs&#x2F;&gt;</span><br><span class="line">        &lt;Category&#x2F;&gt;</span><br><span class="line">        &lt;List&#x2F;&gt;</span><br><span class="line">      &lt;&#x2F;el-col&gt;</span><br><span class="line">      &lt;el-col :span&#x3D;&quot;5&quot;&gt;</span><br><span class="line">        &lt;Map</span><br><span class="line">          v-if&#x3D;&quot;point.length&quot;</span><br><span class="line">          :width&#x3D;&quot;230&quot;</span><br><span class="line">          :height&#x3D;&quot;290&quot;</span><br><span class="line">          :point&#x3D;&quot;point&quot;&#x2F;&gt;</span><br><span class="line">      &lt;&#x2F;el-col&gt;</span><br><span class="line">    &lt;&#x2F;el-row&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">  import Crumbs from &#39;@&#x2F;components&#x2F;products&#x2F;crumbs.vue&#39;</span><br><span class="line">  import Category from &#39;@&#x2F;components&#x2F;products&#x2F;category.vue&#39;</span><br><span class="line">  import List from &#39;@&#x2F;components&#x2F;products&#x2F;list.vue&#39;</span><br><span class="line">  import Map from &#39;@&#x2F;components&#x2F;public&#x2F;map.vue&#39; &#x2F;&#x2F; 1. 引入</span><br><span class="line"></span><br><span class="line">  export default &#123;</span><br><span class="line">    components: &#123;</span><br><span class="line">      Crumbs,</span><br><span class="line">      Category,</span><br><span class="line">      List,</span><br><span class="line">      Map</span><br><span class="line">    &#125;,</span><br><span class="line">    data () &#123;</span><br><span class="line">      return &#123;</span><br><span class="line">        point: [114.30, 30.60] &#x2F;&#x2F; 2. 传入自定义中心点坐标</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style lang&#x3D;&quot;scss&quot;&gt;</span><br><span class="line">  @import &#39;@&#x2F;assets&#x2F;css&#x2F;products&#x2F;products.scss&#39;;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+  </entry>
+  <entry>
+    <title>收藏的网址</title>
+    <url>/2020/03/08/%E6%94%B6%E8%97%8F%E7%9A%84%E7%BD%91%E5%9D%80/</url>
+    <content><![CDATA[<h2 id="1-技术博客"><a href="#1-技术博客" class="headerlink" title="1.技术博客"></a>1.技术博客</h2><p><a href="https://tridiamond.me/" target="_blank" rel="noopener">https://tridiamond.me/</a></p>
+<h2 id="2-博客模版hexo"><a href="#2-博客模版hexo" class="headerlink" title="2.博客模版hexo"></a>2.博客模版hexo</h2><p>（所有的地址都能够在展示网址的页面最底部看到地址）<br><a href="https://tridiamond.me/" target="_blank" rel="noopener">https://tridiamond.me/</a><br><a href="https://www.huweihuang.com/" target="_blank" rel="noopener">https://www.huweihuang.com/</a><br><a href="https://shen-yu.gitee.io/" target="_blank" rel="noopener">https://shen-yu.gitee.io/</a></p>
+<h2 id="3-hexo博客插件"><a href="#3-hexo博客插件" class="headerlink" title="3.hexo博客插件"></a>3.hexo博客插件</h2><p><a href="https://github.com/xCss/Valine" target="_blank" rel="noopener">https://github.com/xCss/Valine</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Hello World2</title>
+    <url>/2020/03/08/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>测试</category>
+      </categories>
+      <tags>
+        <tag>测试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>大美湘西</title>
+    <url>/2020/02/21/hello2/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>旅行</category>
+      </categories>
+      <tags>
+        <tag>旅行</tag>
+        <tag>国内</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>About Me</title>
+    <url>/2019/12/01/about/</url>
+    <content><![CDATA[<blockquote>
+<p>A Coder, live in Hangzhou, China.</p>
+</blockquote>
+<p>姓名：沈宇<br>现居：杭州<br>GitHub: <a href="https://github.com/Shen-Yu" target="_blank" rel="noopener">Shen-Yu</a><br>twitter: <a href="https://twitter.com/shenyu1995" target="_blank" rel="noopener">shenyu1995</a><br>QQ: <a href="http://wpa.qq.com/msgrd?v=3&uin=448766534&site=qq&menu=yes" target="_blank" rel="noopener">448766534</a><br>微信: yuknass</p>
+<a id="more"></a>
+
+<!-- ![avatar.jpg](https://i.loli.net/2019/12/02/Hw5WJIMKzi1YrU8.jpg) -->
+
+<img src="https://i.loli.net/2019/12/28/ewSHTg3uWyJkaEv.jpg" alt="avatar" width="300" style="border-radius:50%"/>
+]]></content>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>原汁原味黔东南</title>
+    <url>/2018/11/21/%E5%8E%9F%E6%B1%81%E5%8E%9F%E5%91%B3%E9%BB%94%E4%B8%9C%E5%8D%97/</url>
+    <content><![CDATA[<p>从昆明向东过来，我预选的目的地有两个，都匀和凯里。到都匀的话去荔波比较方便，到凯里的话去看黔东南苗寨比较方便。考虑到荔波在南边，而且交通不是很方便（目前正在建凯里到荔波的大路，建成后大巴过去还是挺方便的），如果从都匀过去的话也会浪费几天时间，所以就留下了这一程最遗憾的一点，就是没能去荔波看看喀斯特地貌（其实来之前我对荔波已经做足了攻略）。好在这一点遗憾马上就被朗德和镇远给弥补了。</p>
+<a id="more"></a>
+
+<h2 id="朗德苗寨"><a href="#朗德苗寨" class="headerlink" title="朗德苗寨"></a>朗德苗寨</h2><p>相较于西江千户苗寨的喧嚣与商业化，朗德苗寨则显得安静许多，它很多地方也保留了原汁原味的苗族特色。例如十二道拦路酒，例如手工制作苗族银首饰。这也是我考虑再三都想去的原因。虽然餐饮住宿和西江千户比起来差很多，夜景应该也要差很多，但我觉得苗寨应当是原生的才最值得一去。 去朗德苗寨很方便，可以从凯里汽车站坐中巴直接过去，从早上7点开始，大约2小时一班，来回都是10块钱，平时没什么人，基本都是当地人在来回。中巴是沿着山路盘旋开上去的，一路上经过南花苗寨和季刀苗寨，都是很原生，小众安静的苗寨，山顶云雾缭绕，溪水在村寨门口流过，苗族姑娘在溪边拍打衣服，这种场景绝对令每个游客都神往，路上遇到美好的画面可以让司机停下然后下车逛逛，坐下一班再去朗德。班车从汽车站大概一个小时到朗德，我来的时候正好旅游淡季，下了中巴，感觉整个苗寨都是属于自己的。也有游客中心啥的设施，但朗德还是保留着大部分完整的味道。 下了中巴往大寨门口走进去是朗德下寨，可以随便逛逛，最美的是朗德上寨，需要沿着公路自己走过去大概几百米，或者可以坐游览车过去。我当时走错了，把上面有个什么雷寨错当成朗德上寨了，后来从山上走下来，多花费了不少力气。注意，朗德上寨和下寨中间隔了一段公路的，你可以沿着下了车后的大寨门下面的溪水，一路走过去。</p>
+<p><img src="http://n2-q.mafengwo.net/s12/M00/AD/86/wKgED1v1GqGAYrw8AAZ5mz4afSc22.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"></p>
+<p>下寨到上寨的这段路，风景也不错，主要是溪水潺潺。</p>
+<p><img src="http://n2-q.mafengwo.net/s12/M00/AD/88/wKgED1v1GqOAAmIVAAfCH-6tBis04.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"></p>
+<p><img src="http://b1-q.mafengwo.net/s12/M00/AD/8B/wKgED1v1GqWAGlJOAAwE9jqC2D457.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"><br>这就是朗德上寨，门口有个石牌，因为08年的时候奥运圣火也经过这儿，所以雕刻着圣火和奥运五环。<br><img src="http://b2-q.mafengwo.net/s12/M00/AD/8E/wKgED1v1GqeAWzELAAq6KghKmug12.jpeg?imageView2%2F2%2Fw%2F700%2Fh%2F600%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"><br>朗德上寨的表演场，上午10点左右和下午3点多各有一场表演的。<br><img src="http://b1-q.mafengwo.net/s12/M00/AD/90/wKgED1v1GqmAUOm4AAobpiwu7xY70.jpeg?imageView2%2F2%2Fw%2F700%2Fh%2F600%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"></p>
+<p><img src="http://b4-q.mafengwo.net/s12/M00/AD/91/wKgED1v1GqqAOPIWAAuJYr3Ngy477.jpeg?imageView2%2F2%2Fw%2F700%2Fh%2F600%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"></p>
+<p>以上便是朗德上寨的风光了，从朗德回凯里的班车最迟是傍晚4点半。如果错过了就选择住在寨里吧，客栈也是有不少的。整体来讲，朗德就是一个正转型旅游化但尚且少为人知的一个小村寨。</p>
+<h2 id="镇远古镇"><a href="#镇远古镇" class="headerlink" title="镇远古镇"></a>镇远古镇</h2><p>镇远，相较于朗德，知名度就大了很多，交通餐饮住宿十分齐全，火车站汽车站公交，样样齐全，每天都有来自四面八方的游客为它而来。位于舞阳河畔，四周皆山。河水婉婉，这里的古建筑群依山傍水，这里的居民每天过得十分惬意。镇远古镇是属于那种虽然被人声打扰，但却更显韵味的地方。<br><img src="http://p3-q.mafengwo.net/s12/M00/AD/92/wKgED1v1GqyAC57vAAYXapodWRA37.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"><br><img src="http://b3-q.mafengwo.net/s12/M00/AD/B8/wKgED1v1GsuARaW1AAdswBJlKhk91.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"><br><img src="http://b1-q.mafengwo.net/s12/M00/AD/95/wKgED1v1Gq2AITtdAAuWkTIH8TU95.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"><br><img src="http://p1-q.mafengwo.net/s12/M00/AD/98/wKgED1v1Gq-AAY0vAA_EWekUuJY13.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"><br><img src="http://n3-q.mafengwo.net/s12/M00/AD/9B/wKgED1v1GrKAK5__AA8tMU9kaXo27.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"><br>夜色中的镇远灯火相映，辉煌如画，仿佛代表了整个黔东南，想向你慢慢诉说这里的故事。这里的小吃特产，你都能随手在街上选出一家店来去细细品尝。<br><img src="http://b3-q.mafengwo.net/s12/M00/AE/A9/wKgED1v1G3mAS-5bAAn9-dWphu413.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"><br><img src="http://p3-q.mafengwo.net/s12/M00/AE/AB/wKgED1v1G3uAKj5RAAtE20kJn_011.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"><br><img src="http://b2-q.mafengwo.net/s12/M00/AE/AE/wKgED1v1G3yAVnx7AAjGF9W5MWU57.jpeg?imageView2%2F2%2Fw%2F680%2Fq%2F90%7CimageMogr2%2Fstrip%2Fquality%2F90" alt="image.png"></p>
+<p>白天，日光下的镇远脱去了夜晚闪耀的礼服，露出它安静温婉的一面，碧绿的舞阳河水映出她的脸庞。这里的居民每天跳跳舞下下棋钓钓鱼，好不快活！</p>
+]]></content>
+      <categories>
+        <category>旅行</category>
+      </categories>
+      <tags>
+        <tag>旅行</tag>
+        <tag>国内</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo——轻量、简易、高逼格的博客</title>
+    <url>/2018/08/31/myFisrtPost/</url>
+    <content><![CDATA[<p>我的第一篇博客</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>IT技术</tag>
+        <tag>前端</tag>
+      </tags>
+  </entry>
+</search>
